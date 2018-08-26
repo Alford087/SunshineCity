@@ -1,0 +1,64 @@
+dependencies {
+    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    testCompile('junit:junit:4.12') {}
+    testCompile("org.robolectric:robolectric:3.0") {
+//        exclude group: 'org.apache.ant', module: 'ant'
+//        exclude group: 'org.apache.ant', module: 'ant-launcher'
+    }
+    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.robolectric:shadows-httpclient:3.0'
+    testCompile('org.robolectric:robolectric-annotations:3.0') {
+//        exclude group: 'org.apache.ant', module: 'ant'
+//        exclude group: 'org.apache.ant', module: 'ant-launcher'
+    }
+    testCompile("org.robolectric:shadows-support-v4:3.0") { //robolectric针对support-v4的shadows
+//        exclude group: 'org.apache.ant', module: 'ant'
+//        exclude group: 'org.apache.ant', module: 'ant-launcher'
+    }
+//    compile 'com.android.support:support-v4:21.0.3'
+//    testCompile 'org.json:json:20140107'
+//    testCompile 'com.google.android:android:4.1.1.4'
+    testCompile "org.powermock:powermock-module-junit4:1.6.4"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.4"
+    testCompile "org.powermock:powermock-api-mockito:1.6.4"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.4"
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+}
+
+
+android {
+    compileSdkVersion rootProject.ext.appCompileSdkVersion
+    buildToolsVersion rootProject.ext.appBuildToolVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.appMinSdkVersion
+        targetSdkVersion rootProject.ext.appTargetSdkVersion
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+    sourceSets {
+        instrumentTest.setRoot('src/main/test')
+        instrumentTest {
+            manifest.srcFile 'AndroidManifest.xml'
+            java {
+                srcDirs = [
+                        'src/test/java'   //UT放置目录，很重要，请勿更改
+                ]
+            }
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/test/res'
+            ]
+            assets.srcDirs = [
+                    'src/main/assets'
+            ]
+        }
+    }
+}
